@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  # The Tomcat Java Application
+  iomt-app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_URL=jdbc:mysql://mysql-db:3306/iomt_cloud?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      - DB_USER=root
+      - DB_PASS=raju1234
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+
+  # The MySQL Database Server
+  mysql-db:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=raju1234
+      - MYSQL_DATABASE=iomt_cloud
+    volumes:
+      - mysql-data:/var/lib/mysql
+      # Automatically drops our schema structure into the database on first boot
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+volumes:
+  mysql-data:
