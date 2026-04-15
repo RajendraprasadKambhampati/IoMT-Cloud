@@ -1,0 +1,14 @@
+# Compiled class files (Docker will compile from source)
+web/WEB-INF/classes/
+
+# IDE files
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+nbproject/
+
+# OS files
+.DS_Store
+Thumbs.db
